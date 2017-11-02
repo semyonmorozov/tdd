@@ -87,9 +87,9 @@ namespace TagsCloudVisualization
             if (TestContext.CurrentContext.Result.FailCount > 0)
             {
                 var bitmap = new Bitmap(1920, 1080);
-                var draw = Graphics.FromImage(bitmap);
+                var drawer = Graphics.FromImage(bitmap);
                 foreach (Rectangle r in layouter.GetLayout())
-                    draw.DrawRectangle(new Pen(Color.Black, 1), r);
+                    drawer.DrawRectangle(new Pen(Color.Black, 1), r);
                 string path = @"C:\Temp\test.png";
                 bitmap.Save(path);
                 Console.WriteLine("Tag cloud visualization saved to file " + path);
