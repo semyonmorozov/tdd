@@ -56,6 +56,7 @@ namespace TagsCloudVisualization
                 rectangle = CreateRecnagleByCenter((Point)uniquePositivePoints.Current, rectangleSize);
             }
             layout.Add(rectangle);
+            uniquePositivePoints.Reset();
             return rectangle;
         }
     }
