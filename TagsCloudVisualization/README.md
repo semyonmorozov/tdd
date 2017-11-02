@@ -1,1 +1,1 @@
-![TagCloud](result.png)
+![TagCloud](firstResult.png)
