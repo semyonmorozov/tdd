@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -30,6 +29,12 @@ namespace TagsCloudVisualization
         {
             this.center = center;
             this.uniquePositivePoints = new UniquePositivePointsFromSpiral(center);
+        }
+
+        public CircularCloudLayouter(Point center, double alpha)
+        {
+            this.center = center;
+            this.uniquePositivePoints = new UniquePositivePointsFromSpiral(center,alpha);
         }
 
 

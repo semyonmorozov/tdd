@@ -14,6 +14,11 @@ namespace TagsCloudVisualization
         {
             spiral = new Spiral(spiralCenter);
         }
+
+        public UniquePositivePointsFromSpiral(Point spiralCenter,double alpha)
+        {
+            spiral = new Spiral(spiralCenter,alpha);
+        }
         public object Current => spiral.GetPoint(index);
 
         public bool MoveNext()
