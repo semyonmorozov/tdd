@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -31,14 +32,23 @@ namespace TagsCloudVisualization
             this.uniquePositivePoints = new UniquePositivePointsFromSpiral(center);
         }
 
+
+        private Rectangle CreateRecnagleByCenter(Point center, Size size)
+        {
+            int leftTopPointX = center.X - size.Width / 2;
+            int leftTopPointY = center.Y - size.Height / 2;
+            var leftTopPoint = new Point(leftTopPointX,leftTopPointY);
+            return new Rectangle(leftTopPoint,size);
+        }
+
         public Rectangle PutNextRectangle(Size rectangleSize)
         {
             uniquePositivePoints.MoveNext();
-            var rectangle = new Rectangle((Point)uniquePositivePoints.Current, rectangleSize);
+            var rectangle = CreateRecnagleByCenter((Point)uniquePositivePoints.Current, rectangleSize);
             while (layout.Any(r => r.IntersectsWith(rectangle)))
             {
                 uniquePositivePoints.MoveNext();
-                rectangle = new Rectangle((Point)uniquePositivePoints.Current, rectangleSize);
+                rectangle = CreateRecnagleByCenter((Point)uniquePositivePoints.Current, rectangleSize);
             }
             layout.Add(rectangle);
             return rectangle;
