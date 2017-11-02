@@ -81,6 +81,19 @@ namespace TagsCloudVisualization
             firstRectangle.IntersectsWith(secondRectangle).Should().Be(false);
         }
 
+        [TearDown]
+        public void Dispose()
+        {
+            if (TestContext.CurrentContext.Result.FailCount > 0)
+            {
+                var bitmap = new Bitmap(1920, 1080);
+                var draw = Graphics.FromImage(bitmap);
+                foreach (Rectangle r in layouter.GetLayout())
+                    draw.DrawRectangle(new Pen(Color.Black, 1), r);
+                string path = @"C:\Temp\test.png";
+                bitmap.Save(path);
+                Console.WriteLine("Tag cloud visualization saved to file " + path);
+            }
 
         }
     }
