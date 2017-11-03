@@ -31,10 +31,10 @@ namespace TagsCloudVisualization
             this.uniquePositivePoints = new UniquePositivePointsFromSpiral(center);
         }
 
-        public CircularCloudLayouter(Point center, double alpha)
+        public CircularCloudLayouter(Point center, double spreading)
         {
             this.center = center;
-            this.uniquePositivePoints = new UniquePositivePointsFromSpiral(center,alpha);
+            this.uniquePositivePoints = new UniquePositivePointsFromSpiral(center,spreading);
         }
 
 

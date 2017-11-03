@@ -8,12 +8,12 @@ namespace TagsCloudVisualization
     class Spiral
     {
         private Point center = new Point(0,0);
-        private double alpha = 0.1;
+        private double spreading = 1;
 
-        public Spiral(Point center, double alpha)
+        public Spiral(Point center, double spreading)
         {
             this.center = center;
-            this.alpha = alpha;
+            this.spreading = spreading;
         }
 
         public Spiral(Point center)
@@ -21,20 +21,20 @@ namespace TagsCloudVisualization
             this.center = center;
         }
 
-        public Spiral(double alpha)
+        public Spiral(double spreading)
         {
-            this.alpha = alpha;
+            this.spreading = spreading;
         }
 
         public Spiral()
         {
-            //Initialization spiral with default value of center and alpha
+            //Initialization spiral with default value of center and spreading
         }
 
         public Point GetPoint(double angle)
         {
-            int x = (int) (alpha * angle * Math.Cos(angle)) + center.X;
-            int y = (int) (alpha * angle * Math.Sin(angle)) + center.Y;
+            int x = (int) (spreading * angle * Math.Cos(angle)) + center.X;
+            int y = (int) (spreading * angle * Math.Sin(angle)) + center.Y;
             return new Point(x, y);
         }
     }
@@ -57,9 +57,9 @@ namespace TagsCloudVisualization
         [TestCase(2, 5, 2, -9)]
         [TestCase(2, 7, 10, 9)]
         [TestCase(2, 10, -16, -10)]
-        public void ReturnCorrectPoint_WithCustomAlpha_AndDefaultCenter(double alpha, double angle, int expectedX, int expectedY)
+        public void ReturnCorrectPoint_WithCustomAlpha_AndDefaultCenter(double spreading, double angle, int expectedX, int expectedY)
         {
-            var spiral = new Spiral(alpha);
+            var spiral = new Spiral(spreading);
             spiral.GetPoint(angle).ShouldBeEquivalentTo(new Point(expectedX, expectedY));
         }
 
@@ -68,9 +68,9 @@ namespace TagsCloudVisualization
         [TestCase(2, 1, 1, 1, 2, 2)]
         [TestCase(2, 1, -1, -1, 0, 0)]
         [TestCase(2, 7, -5, 6, 5, 15)]
-        public void ReturnCorrectPoint_WithCustomCenter_AndCustomAlpha(double alpha, double angle, int centerX, int centerY, int expectedX, int expectedY)
+        public void ReturnCorrectPoint_WithCustomCenter_AndCustomAlpha(double spreading, double angle, int centerX, int centerY, int expectedX, int expectedY)
         {
-            var spiral = new Spiral(new Point(centerX,centerY), alpha);
+            var spiral = new Spiral(new Point(centerX,centerY), spreading);
             spiral.GetPoint(angle).ShouldBeEquivalentTo(new Point(expectedX, expectedY));
         }
     }
