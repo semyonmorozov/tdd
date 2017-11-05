@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -62,10 +63,11 @@ namespace TagsCloudVisualization
     {
         private CircularCloudLayouter layouter;
 
+        private Rectangle screenBounds = Screen.PrimaryScreen.Bounds;
         [SetUp]
         public void Init()
         {
-            layouter = new CircularCloudLayouter(new Point(960, 540));
+            layouter = new CircularCloudLayouter(new Point(screenBounds.Width /2 , screenBounds.Height / 2));
         }
 
         [TestCase(1, 2)]
@@ -98,7 +100,8 @@ namespace TagsCloudVisualization
         {
             if (TestContext.CurrentContext.Result.FailCount > 0)
             {
-                var bitmap = new Bitmap(1920, 1080);
+                var testName = TestContext.CurrentContext.Test.Name;
+                var bitmap = new Bitmap(screenBounds.Width, screenBounds.Height);
                 var drawer = Graphics.FromImage(bitmap);
                 foreach (Rectangle r in layouter.Layout)
                     drawer.DrawRectangle(new Pen(Color.Black, 1), r);
