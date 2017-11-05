@@ -1,2 +1,2 @@
-![TagCloud](firstResult.png)
-![TagCloud](cloudWithFrequencyWeight.png)
+![TagCloud](Samples\firstResult.png)
+![TagCloud](Samples\cloudWithFrequencyWeight.png)
