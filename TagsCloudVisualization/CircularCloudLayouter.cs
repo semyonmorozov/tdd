@@ -9,21 +9,17 @@ namespace TagsCloudVisualization
 {
     class CircularCloudLayouter
     {
-        private Point center;
+        
 
         private UniquePositivePointsFromSpiral uniquePositivePoints;
 
+        private Point center;
+
+        public Point Center => center;
+
         private List<Rectangle> layout = new List<Rectangle>();
 
-        public Point GetCenter()
-        {
-            return center;
-        }
-
-        public List<Rectangle> GetLayout()
-        {
-            return layout;
-        }
+        public List<Rectangle> Layout => layout;
 
         public CircularCloudLayouter(Point center)
         {
@@ -77,7 +73,7 @@ namespace TagsCloudVisualization
         {
             Point center = new Point(x, y);
             layouter = new CircularCloudLayouter(center);
-            layouter.GetCenter().Should().Be(center);
+            layouter.Center.Should().Be(center);
         }
 
         [Test]
@@ -86,11 +82,11 @@ namespace TagsCloudVisualization
             Random rnd = new Random();
             for (int i = 0; i < 150; i++)
                 layouter.PutNextRectangle(new Size(rnd.Next(10, 100), rnd.Next(10, 100)));
-            layouter.GetLayout().Count.Should().Be(150);
+            layouter.Layout.Count.Should().Be(150);
         }
 
         [Test]
-        public void AddRectaonglesToLayout_WithoutIntersection()
+        public void AddRectanglesToLayout_WithoutIntersection()
         {
             var firstRectangle = layouter.PutNextRectangle(new Size(120, 30));
             var secondRectangle = layouter.PutNextRectangle(new Size(110, 50));
@@ -104,7 +100,7 @@ namespace TagsCloudVisualization
             {
                 var bitmap = new Bitmap(1920, 1080);
                 var drawer = Graphics.FromImage(bitmap);
-                foreach (Rectangle r in layouter.GetLayout())
+                foreach (Rectangle r in layouter.Layout)
                     drawer.DrawRectangle(new Pen(Color.Black, 1), r);
                 string path = @"C:\Temp\test.png";
                 bitmap.Save(path);
