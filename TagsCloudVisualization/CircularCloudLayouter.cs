@@ -105,9 +105,9 @@ namespace TagsCloudVisualization
                 var drawer = Graphics.FromImage(bitmap);
                 foreach (Rectangle r in layouter.Layout)
                     drawer.DrawRectangle(new Pen(Color.Black, 1), r);
-                string path = @"C:\Temp\test.png";
+                string path = @"C:\Temp\"+testName+".png";
                 bitmap.Save(path);
-                Console.WriteLine("Tag cloud visualization saved to file " + path);
+                TestContext.WriteLine("Tag cloud visualization saved to file " + path);
             }
 
         }
