@@ -8,17 +8,12 @@ namespace TagsCloudVisualization
     class Spiral
     {
         private Point center = new Point(0,0);
-        private double spreading = 1;
+        private double spreading;
 
-        public Spiral(Point center, double spreading)
+        public Spiral(Point center, double spreading=1)
         {
             this.center = center;
             this.spreading = spreading;
-        }
-
-        public Spiral(Point center)
-        {
-            this.center = center;
         }
 
         public Spiral(double spreading)
