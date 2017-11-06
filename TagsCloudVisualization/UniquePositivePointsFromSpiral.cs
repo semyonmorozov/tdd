@@ -63,10 +63,9 @@ namespace TagsCloudVisualization
             for (var i = 0; i < 40; i++)
             {
                 points.MoveNext();
-                var point = (Point) points.Current;
-                uniquePoints.Should().NotContain(point);
-                uniquePoints.Add(point);
+                uniquePoints.Add((Point)points.Current);
             }
+            uniquePoints.Should().OnlyHaveUniqueItems();
         }
 
         [Test]
