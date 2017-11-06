@@ -96,25 +96,37 @@ namespace TagsCloudVisualization
             layouter.Center.Should().Be(center);
         }
 
-        [Test]
-        public void AddingRectanglesToLayout()
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(150)]
+        public void AddingRectanglesToLayout(int numOfRectangles)
         {
-            Random rnd = new Random();
-            for (int i = 0; i < 150; i++)
+            var rnd = new Random();
+            for (var i = 0; i < numOfRectangles; i++)
                 layouter.PutNextRectangle(new Size(rnd.Next(10, 100), rnd.Next(10, 100)));
-            layouter.Layout.Count.Should().Be(150);
+            layouter.Layout().Count.Should().Be(numOfRectangles);
         }
 
-        [Test]
-        public void AddRectanglesToLayout_WithoutIntersection()
+        [TestCase(10)]
+        [TestCase(30)]
+        public void LayOutRectangles_WithoutIntersection(int numOfRectangles)
+        {
+            var rnd = new Random();
+            for (var i = 0; i < numOfRectangles; i++)
+                layouter.PutNextRectangle(new Size(rnd.Next(10, 100), rnd.Next(10, 100)));
+            var layout = layouter.Layout();
+            foreach (var rectangleA in layout)
+                foreach (var rectangleB in layout)
+                    if (rectangleA!=rectangleB)
+                        rectangleA.IntersectsWith(rectangleB).Should().Be(false);
+        }
+
         [TestCase(0.4, 100)]
         [TestCase(0.5, 150)]
         [TestCase(0.6, 300)]
         public void LayOutRectangles_Tightly(double ratioOfAreas,int numOfRectangles)
         {
-            var firstRectangle = layouter.PutNextRectangle(new Size(120, 30));
-            var secondRectangle = layouter.PutNextRectangle(new Size(110, 50));
-            firstRectangle.IntersectsWith(secondRectangle).Should().Be(false);
             var rnd = new Random();
             double radius = 0;
             for (var i = 0; i < numOfRectangles; i++)
