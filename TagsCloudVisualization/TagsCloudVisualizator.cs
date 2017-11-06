@@ -6,10 +6,13 @@ namespace TagsCloudVisualization
 {
     class TagsCloudVisualizator
     {
-        private int width;
-        private int height;
+        private readonly int width;
+        private readonly int height;
         private Bitmap tagsCloud;
         private Dictionary<string, int> tags = new Dictionary<string, int>();
+
+        private const int minTextSize = 6;
+        private const int maxTextSize = 150;
 
         public TagsCloudVisualizator(int width, int height)
         {
@@ -30,8 +33,7 @@ namespace TagsCloudVisualization
             var drawer = Graphics.FromImage(tagsCloud);
 
             drawer.Clear(bgColor);
-            const int maxTextSize = 150;
-            float normaCoef = tags.Values.Max()/ maxTextSize;
+            float normaCoef = tags.Values.Max() / maxTextSize;
 
             foreach (var tag in tags)
             {
@@ -50,7 +52,6 @@ namespace TagsCloudVisualization
 
         private float NormalizeWeight(float weight, float normaCoef)
         {
-            const int minTextSize = 6;
             weight = weight / normaCoef;
             return weight < minTextSize ? minTextSize : weight;
         }
