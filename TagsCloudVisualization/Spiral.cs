@@ -7,29 +7,19 @@ namespace TagsCloudVisualization
 {
     class Spiral
     {
-        private Point center = new Point(0,0);
-        private double spreading;
+        private readonly Point center;
+        private readonly double spreading;
 
-        public Spiral(Point center, double spreading=1)
+        public Spiral(Point center = default(Point), double spreading=0.1)
         {
             this.center = center;
             this.spreading = spreading;
         }
 
-        public Spiral(double spreading)
-        {
-            this.spreading = spreading;
-        }
-
-        public Spiral()
-        {
-            //Initialization spiral with default value of center and spreading
-        }
-
         public Point GetPoint(double angle)
         {
-            int x = (int) (spreading * angle * Math.Cos(angle)) + center.X;
-            int y = (int) (spreading * angle * Math.Sin(angle)) + center.Y;
+            var x = (int) (spreading * angle * Math.Cos(angle)) + center.X;
+            var y = (int) (spreading * angle * Math.Sin(angle)) + center.Y;
             return new Point(x, y);
         }
     }
@@ -54,7 +44,7 @@ namespace TagsCloudVisualization
         [TestCase(2, 10, -16, -10)]
         public void ReturnCorrectPoint_WithCustomAlpha_AndDefaultCenter(double spreading, double angle, int expectedX, int expectedY)
         {
-            var spiral = new Spiral(spreading);
+            var spiral = new Spiral(spreading: spreading);
             spiral.GetPoint(angle).ShouldBeEquivalentTo(new Point(expectedX, expectedY));
         }
 

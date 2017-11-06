@@ -2,43 +2,44 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
 using FluentAssertions;
 using NUnit.Framework;
+using System.Windows.Forms;
 
 namespace TagsCloudVisualization
 {
     class CircularCloudLayouter
     {
-        
-
         private UniquePositivePointsFromSpiral uniquePositivePoints;
 
-        private Point center;
-
-        public Point Center => center;
+        public readonly Point Center;
 
         private List<Rectangle> layout = new List<Rectangle>();
 
-        public List<Rectangle> Layout => layout;
+        public List<Rectangle> Layout()
+        {
+            var copyOfLayout = new Rectangle[layout.Count];
+            layout.CopyTo(copyOfLayout);
+            return copyOfLayout.ToList();
+        }
 
         public CircularCloudLayouter(Point center)
         {
-            this.center = center;
-            this.uniquePositivePoints = new UniquePositivePointsFromSpiral(center);
+            Center = center;
+            uniquePositivePoints = new UniquePositivePointsFromSpiral(center);
         }
 
         public CircularCloudLayouter(Point center, double spreading)
         {
-            this.center = center;
-            this.uniquePositivePoints = new UniquePositivePointsFromSpiral(center,spreading);
+            Center = center;
+            uniquePositivePoints = new UniquePositivePointsFromSpiral(center,spreading);
         }
 
 
-        private Rectangle CreateRecnagleByCenter(Point center, Size size)
+        private static Rectangle CreateRecnagleByCenter(Point center, Size size)
         {
-            int leftTopPointX = center.X - size.Width / 2;
-            int leftTopPointY = center.Y - size.Height / 2;
+            var leftTopPointX = center.X - size.Width / 2;
+            var leftTopPointY = center.Y - size.Height / 2;
             var leftTopPoint = new Point(leftTopPointX,leftTopPointY);
             return new Rectangle(leftTopPoint,size);
         }
@@ -62,7 +63,6 @@ namespace TagsCloudVisualization
     public class CircularCloudLayouter_Should
     {
         private CircularCloudLayouter layouter;
-
         private Rectangle screenBounds = Screen.PrimaryScreen.Bounds;
         [SetUp]
         public void Init()
@@ -73,7 +73,7 @@ namespace TagsCloudVisualization
         [TestCase(1, 2)]
         public void ReturnCorrectCenter_AfterInitialization(int x, int y)
         {
-            Point center = new Point(x, y);
+            var center = new Point(x, y);
             layouter = new CircularCloudLayouter(center);
             layouter.Center.Should().Be(center);
         }
@@ -103,13 +103,12 @@ namespace TagsCloudVisualization
                 var testName = TestContext.CurrentContext.Test.Name;
                 var bitmap = new Bitmap(screenBounds.Width, screenBounds.Height);
                 var drawer = Graphics.FromImage(bitmap);
-                foreach (Rectangle r in layouter.Layout)
+                foreach (var r in layouter.Layout())
                     drawer.DrawRectangle(new Pen(Color.Black, 1), r);
-                string path = @"C:\Temp\"+testName+".png";
+                var path = String.Concat(@"C:\Temp\",testName,".png");
                 bitmap.Save(path);
                 TestContext.WriteLine("Tag cloud visualization saved to file " + path);
             }
-
         }
     }
 }

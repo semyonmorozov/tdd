@@ -8,7 +8,7 @@ namespace TagsCloudVisualization
 {
     class UniquePositivePointsFromSpiral : IEnumerable, IEnumerator
     {
-        private Spiral spiral;
+        private readonly Spiral spiral;
         private int index=-1;
         public UniquePositivePointsFromSpiral(Point spiralCenter)
         {
@@ -23,7 +23,7 @@ namespace TagsCloudVisualization
 
         public bool MoveNext()
         {
-            object oldPoint = Current;
+            var oldPoint = Current;
             index++;
             while(oldPoint.Equals(Current)||!IsPositive((Point)Current))
                     index++;
@@ -59,11 +59,11 @@ namespace TagsCloudVisualization
         [Test]
         public void ReturnUniquePoints()
         {
-            List<Point> uniquePoints = new List<Point>();
-            for (int i = 0; i < 40; i++)
+            var uniquePoints = new List<Point>();
+            for (var i = 0; i < 40; i++)
             {
                 points.MoveNext();
-                Point point = (Point) points.Current;
+                var point = (Point) points.Current;
                 uniquePoints.Should().NotContain(point);
                 uniquePoints.Add(point);
             }
@@ -72,10 +72,10 @@ namespace TagsCloudVisualization
         [Test]
         public void ReturnPositivePoints()
         {
-            for (int i = 0; i < 40; i++)
+            for (var i = 0; i < 40; i++)
             {
                 points.MoveNext();
-                Point point = (Point) points.Current;
+                var point = (Point) points.Current;
                 point.X.Should().BePositive();
                 point.Y.Should().BePositive();
             }
