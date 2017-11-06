@@ -19,7 +19,7 @@ namespace TagsCloudVisualization
             var tags = ParseTagsFromFile(String.Concat(pathToProjDir, @"\wordsStats.txt"));
             vizualizator.AddTags(tags);
             var bitmap = vizualizator.Visualize(bgColor, textColor);
-            var path = String.Concat(Path.GetTempPath(), "result", ".png");
+            var path = Path.Combine(Path.GetTempPath(), "result.png");
             bitmap.Save(path);
         }
 
