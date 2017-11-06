@@ -64,6 +64,24 @@ namespace TagsCloudVisualization
     {
         private CircularCloudLayouter layouter;
         private Rectangle screenBounds = Screen.PrimaryScreen.Bounds;
+
+        private static double GetMaxDistance(Rectangle rectangle, Point center)
+        {
+            var extremePoints = new List<Point>
+            {
+                new Point(rectangle.Left, rectangle.Top),
+                new Point(rectangle.Right, rectangle.Top),
+                new Point(rectangle.Left, rectangle.Bottom),
+                new Point(rectangle.Right, rectangle.Top)
+            };
+            return extremePoints.Select(p => GetDistance(p, center)).Max();
+        }
+
+        private static double GetDistance(Point a, Point b)
+        {
+            return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
+        }
+
         [SetUp]
         public void Init()
         {
@@ -89,10 +107,25 @@ namespace TagsCloudVisualization
 
         [Test]
         public void AddRectanglesToLayout_WithoutIntersection()
+        [TestCase(0.4, 100)]
+        [TestCase(0.5, 150)]
+        [TestCase(0.6, 300)]
+        public void LayOutRectangles_Tightly(double ratioOfAreas,int numOfRectangles)
         {
             var firstRectangle = layouter.PutNextRectangle(new Size(120, 30));
             var secondRectangle = layouter.PutNextRectangle(new Size(110, 50));
             firstRectangle.IntersectsWith(secondRectangle).Should().Be(false);
+            var rnd = new Random();
+            double radius = 0;
+            for (var i = 0; i < numOfRectangles; i++)
+            {
+                var rectangle = layouter.PutNextRectangle(new Size(rnd.Next(10, 100), rnd.Next(10, 100)));
+                var distance = GetMaxDistance(rectangle, layouter.Center);
+                if (distance > radius) radius = distance;
+            }
+            var areaOfRectangles = layouter.Layout().Sum(r => (double)r.Height * r.Width);
+            var areaOfCircle = Math.PI * Math.Pow(radius, 2);
+            areaOfRectangles.Should().BeGreaterThan(areaOfCircle * ratioOfAreas);
         }
 
         [TearDown]
