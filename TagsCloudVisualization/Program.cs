@@ -15,7 +15,8 @@ namespace TagsCloudVisualization
             var textColor = Color.White;
             var screenBounds = Screen.PrimaryScreen.Bounds;
             var vizualizator = new TagsCloudVisualizator(screenBounds.Width,screenBounds.Height);
-            var tags = ParseTagsFromFile(@"wordsStats.txt");
+            string pathToProjDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+            var tags = ParseTagsFromFile(String.Concat(pathToProjDir, @"\wordsStats.txt"));
             vizualizator.AddTags(tags);
             var bitmap = vizualizator.Visualize(bgColor, textColor);
             var path = String.Concat(Path.GetTempPath(), "result", ".png");
