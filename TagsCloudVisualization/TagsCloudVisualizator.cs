@@ -30,8 +30,8 @@ namespace TagsCloudVisualization
             var drawer = Graphics.FromImage(tagsCloud);
 
             drawer.Clear(bgColor);
-
-            float normaCoef = tags.Values.Max()/150;
+            const int maxTextSize = 150;
+            float normaCoef = tags.Values.Max()/ maxTextSize;
 
             foreach (var tag in tags)
             {
