@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace TagsCloudVisualization
 {
@@ -8,38 +10,28 @@ namespace TagsCloudVisualization
     {
         static void Main(string[] args)
         {
-            var layouter = new CircularCloudLayouter(new Point(960, 960),0.04);
-            var bitmap = new Bitmap(1920, 1920);
-            var drawer = Graphics.FromImage(bitmap);
-            drawer.Clear(Color.DarkMagenta);
-            
-            string line;
+            var bgColor = Color.DarkMagenta;
+            var textColor = Color.White;
+            var tags = new Dictionary<string, int>();
+            var screenBounds = Screen.PrimaryScreen.Bounds;
+            var vizualizator = new TagsCloudVisualizator(screenBounds.Width,screenBounds.Height);
             using (var file = new System.IO.StreamReader(@"wordsStats.txt"))
             {
-                
-                for (int i=0;i<250;i++)
+                for (int i=0;i<400;i++)
                 {
-                    line = file.ReadLine();
+                    var line = file.ReadLine();
+                    if (line == null) break;
                     line = Regex.Replace(line, "\t", " ");
                     string[] splitedLine = line.Split(' ');
                     string word = splitedLine[1];
-                    float frequency = float.Parse(splitedLine[2])/4000;
-                    var font = new Font("Arial", frequency);
-                    var rectangle = layouter.PutNextRectangle(Size.Ceiling(drawer.MeasureString(word, font)));
-                    var br = new SolidBrush(Color.White);
-                    drawer.DrawString(word, font, br, rectangle);
+                    var frequency = Int32.Parse(splitedLine[2]);
+                    tags.Add(word,frequency);
                 }
             }
-            string path = @"C:\Temp\result4.png";
+            vizualizator.AddTags(tags);
+            var bitmap = vizualizator.Visualize(bgColor, textColor);
+            string path = @"C:\Temp\result.png";
             bitmap.Save(path);
-
-        }
-
-        public static Size Ceiling(this SizeF floatSize)
-        {
-            int height = (int) Math.Ceiling(floatSize.Height);
-            int width = (int)Math.Ceiling(floatSize.Width);
-            return new Size(width,height);
         }
     }
 }
