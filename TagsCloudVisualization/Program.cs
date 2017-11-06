@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -12,12 +13,21 @@ namespace TagsCloudVisualization
         {
             var bgColor = Color.DarkMagenta;
             var textColor = Color.White;
-            var tags = new Dictionary<string, int>();
             var screenBounds = Screen.PrimaryScreen.Bounds;
             var vizualizator = new TagsCloudVisualizator(screenBounds.Width,screenBounds.Height);
-            using (var file = new System.IO.StreamReader(@"wordsStats.txt"))
+            var tags = ParseTagsFromFile(@"wordsStats.txt");
+            vizualizator.AddTags(tags);
+            var bitmap = vizualizator.Visualize(bgColor, textColor);
+            var path = String.Concat(Path.GetTempPath(), "result", ".png");
+            bitmap.Save(path);
+        }
+
+        private static Dictionary<string, int> ParseTagsFromFile(string filePath)
+        {
+            var tags = new Dictionary<string, int>();
+            using (var file = new StreamReader(filePath))
             {
-                for (var i=0;i<400;i++)
+                for (var i = 0; i < 400; i++)
                 {
                     var line = file.ReadLine();
                     if (line == null) break;
@@ -25,13 +35,10 @@ namespace TagsCloudVisualization
                     var splitedLine = line.Split(' ');
                     var word = splitedLine[1];
                     var frequency = Int32.Parse(splitedLine[2]);
-                    tags.Add(word,frequency);
+                    tags.Add(word, frequency);
                 }
             }
-            vizualizator.AddTags(tags);
-            var bitmap = vizualizator.Visualize(bgColor, textColor);
-            var path = @"C:\Temp\result.png";
-            bitmap.Save(path);
+            return tags;
         }
     }
 }
