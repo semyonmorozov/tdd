@@ -368,7 +368,6 @@
 368	anyone	9050
 369	person	8997
 370	bye	8969
----	---	---
 372	somebody	8923
 373	dr	8917
 374	heart	8824
