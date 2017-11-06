@@ -82,8 +82,16 @@ namespace TagsCloudVisualization
             return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
         }
 
+        private CircularCloudLayouter FillUpLayout(CircularCloudLayouter layouter, int numOfRectangles)
+        {
+            var rnd = new Random();
+            for (var i = 0; i < numOfRectangles; i++)
+                layouter.PutNextRectangle(new Size(rnd.Next(10, 100), rnd.Next(10, 100)));
+            return layouter;
+        }
+
         [SetUp]
-        public void Init()
+        public void SetUp()
         {
             layouter = new CircularCloudLayouter(new Point(screenBounds.Width /2 , screenBounds.Height / 2));
         }
@@ -102,9 +110,7 @@ namespace TagsCloudVisualization
         [TestCase(150)]
         public void AddingRectanglesToLayout(int numOfRectangles)
         {
-            var rnd = new Random();
-            for (var i = 0; i < numOfRectangles; i++)
-                layouter.PutNextRectangle(new Size(rnd.Next(10, 100), rnd.Next(10, 100)));
+            layouter = FillUpLayout(layouter, numOfRectangles);
             layouter.Layout().Count.Should().Be(numOfRectangles);
         }
 
@@ -112,9 +118,7 @@ namespace TagsCloudVisualization
         [TestCase(30)]
         public void LayOutRectangles_WithoutIntersection(int numOfRectangles)
         {
-            var rnd = new Random();
-            for (var i = 0; i < numOfRectangles; i++)
-                layouter.PutNextRectangle(new Size(rnd.Next(10, 100), rnd.Next(10, 100)));
+            layouter = FillUpLayout(layouter, numOfRectangles);
             var layout = layouter.Layout();
             foreach (var rectangleA in layout)
                 foreach (var rectangleB in layout)
@@ -127,14 +131,8 @@ namespace TagsCloudVisualization
         [TestCase(0.6, 300)]
         public void LayOutRectangles_Tightly(double ratioOfAreas,int numOfRectangles)
         {
-            var rnd = new Random();
-            double radius = 0;
-            for (var i = 0; i < numOfRectangles; i++)
-            {
-                var rectangle = layouter.PutNextRectangle(new Size(rnd.Next(10, 100), rnd.Next(10, 100)));
-                var distance = GetMaxDistance(rectangle, layouter.Center);
-                if (distance > radius) radius = distance;
-            }
+            layouter = FillUpLayout(layouter, numOfRectangles);
+            var radius = layouter.Layout().Select(rectangle => GetMaxDistance(rectangle, layouter.Center)).Max();
             var areaOfRectangles = layouter.Layout().Sum(r => (double)r.Height * r.Width);
             var areaOfCircle = Math.PI * Math.Pow(radius, 2);
             areaOfRectangles.Should().BeGreaterThan(areaOfCircle * ratioOfAreas);
