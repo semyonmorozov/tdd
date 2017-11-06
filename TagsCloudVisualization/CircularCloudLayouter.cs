@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -139,7 +140,7 @@ namespace TagsCloudVisualization
         }
 
         [TearDown]
-        public void Dispose()
+        public void TearDown()
         {
             if (TestContext.CurrentContext.Result.FailCount > 0)
             {
@@ -148,7 +149,7 @@ namespace TagsCloudVisualization
                 var drawer = Graphics.FromImage(bitmap);
                 foreach (var r in layouter.Layout())
                     drawer.DrawRectangle(new Pen(Color.Black, 1), r);
-                var path = String.Concat(@"C:\Temp\",testName,".png");
+                var path = String.Concat(Path.GetTempPath(), testName,".png");
                 bitmap.Save(path);
                 TestContext.WriteLine("Tag cloud visualization saved to file " + path);
             }
